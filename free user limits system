@@ -1,0 +1,23 @@
+// lib/free-limits.ts
+export class FreeLimits {
+  static DAILY_LIMITS = {
+    resumeAnalyses: 10,
+    jobSearches: 50,
+    interviewSessions: 5,
+    applicationsTracked: 1000, // High limit
+  }
+  
+  static async checkLimit(userId: string, action: keyof typeof FreeLimits.DAILY_LIMITS) {
+    // Use localStorage for free tier (no database costs)
+    const key = `limits_${userId}_${action}_${new Date().toDateString()}`
+    const used = parseInt(localStorage.getItem(key) || '0')
+    const limit = FreeLimits.DAILY_LIMITS[action]
+    
+    if (used >= limit) {
+      return { allowed: false, remaining: 0 }
+    }
+    
+    localStorage.setItem(key, (used + 1).toString())
+    return { allowed: true, remaining: limit - used - 1 }
+  }
+}

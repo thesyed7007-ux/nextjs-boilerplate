@@ -1,0 +1,24 @@
+// lib/free-alternatives.ts
+export const FREE_ALTERNATIVES = {
+  // Instead of paid LinkedIn API
+  linkedin: {
+    searchJobs: 'https://www.linkedin.com/jobs/search/?keywords={query}',
+    parseProfile: 'Public profile scraping (limited)'
+  },
+  
+  // Instead of paid Indeed API
+  indeed: {
+    search: 'https://www.indeed.com/jobs?q={query}&l={location}',
+    rss: 'https://rss.indeed.com/rss?q={query}&l={location}'
+  },
+  
+  // Instead of paid ATS
+  atsCheck: {
+    keywords: ['react', 'typescript', 'aws', 'docker', 'kubernetes'],
+    score: (text: string) => {
+      const matches = FREE_ALTERNATIVES.atsCheck.keywords
+        .filter(keyword => text.toLowerCase().includes(keyword))
+      return (matches.length / FREE_ALTERNATIVES.atsCheck.keywords.length) * 100
+    }
+  }
+}
